@@ -11,7 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 PORT = 8000
 # Calculate paths relative to this file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WEB_DIR = os.path.join(BASE_DIR, 'web-app')
+WEB_DIR = os.path.join(BASE_DIR, 'app')
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -36,10 +36,10 @@ def driver():
     """
     Sets up the Headless Chrome Driver.
     """
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options = Options()  # Creates a settings object to configure the browser before it starts
+    chrome_options.add_argument("--headless")  # Runs the browser in the background without a visible UI window (Crucial for CI servers)
+    chrome_options.add_argument("--no-sandbox")  # Disables the security sandbox; prevents crashes on Linux/Docker where the user lacks permissions
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Forces Chrome to use the disk for memory instead of RAM; prevents crashes in environments with low shared memory
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
