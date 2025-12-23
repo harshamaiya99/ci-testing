@@ -37,8 +37,7 @@ def driver():
     Sets up the Headless Chrome Driver.
     """
     chrome_options = Options()  # Creates a settings object to configure the browser before it starts
-    # pytest - v - -tb = no - -html = reports / test_report.html - -self - contained - html
-    # chrome_options.add_argument("--html=tests/reports/test_report.html --self-contained-html")
+
     chrome_options.add_argument("--headless")  # Runs the browser in the background without a visible UI window (Crucial for CI servers)
     chrome_options.add_argument("--no-sandbox")  # Disables the security sandbox; prevents crashes on Linux/Docker where the user lacks permissions
     chrome_options.add_argument("--disable-dev-shm-usage")  # Forces Chrome to use the disk for memory instead of RAM; prevents crashes in environments with low shared memory
