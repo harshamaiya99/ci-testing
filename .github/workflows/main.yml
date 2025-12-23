@@ -28,7 +28,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r tests/requirements.txt
 
-      # 4. Run Tests using Pytest
+      # 4. Run Tests and Generate Report
       - name: Run Selenium Tests
-        # We run from the root, pointing to the tests folder
-        run: pytest tests/test_suite.py -v
+        # syntax: --html=report_name.html --self-contained-html
+        run: pytest tests/test_suite.py -v --html=report.html --self-contained-html
+        continue-on-error: true  # IMPORTANT: upload report even if tests fail!
+
+      # 5. Upload the HTML Report
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        if: always() # Run this even if previous step failed
+        with:
+          name: test-report
+          path: report.html
