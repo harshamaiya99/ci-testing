@@ -6,23 +6,27 @@ from selenium.webdriver.common.by import By
 
 # --- Data Loading Logic ---
 def get_csv_data():
-    """Reads the CSV file and returns a list of tuples for parameterization."""
+    """Reads the CSV file and returns a list of lists for parameterization."""
     data_path = os.path.join(os.path.dirname(__file__), 'test_data.csv')
     test_data = []
     with open(data_path, newline='') as csvfile:
-        reader = csv.reader(csvfile)
+        reader = csv.DictReader(csvfile)
         for row in reader:
-            # Skip header if your CSV has one, otherwise keep as is
-            # if row[0] == 'num1': continue
-            test_data.append(tuple(row))
+            test_data.append(row)
+
     return test_data
 
 
 # --- The Test ---
-@pytest.mark.parametrize("num1, num2, expected", get_csv_data())
-def test_calculator(driver, start_server, num1, num2, expected):
+# Pytest handles lists of lists exactly the same way as lists of tuples
+@pytest.mark.parametrize("row", get_csv_data())
+def test_calculator(driver, start_server, row):
     # 'start_server' fixture returns the URL string we yielded in conftest.py
     base_url = start_server
+
+    num1 = row["num1"]
+    num2 = row["num2"]
+    expected = row["expected"]
 
     # 1. Navigate
     driver.get(base_url)
